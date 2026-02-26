@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Doações</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#111827; --txt:#e5e7eb; --muted:#9ca3af;
+      --brand:#7c3aed; --brand2:#22c55e; --line:rgba(255,255,255,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background:
+        radial-gradient(1200px 700px at 15% 0%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(900px 600px at 80% 5%, rgba(34,197,94,.16), transparent 55%),
+        var(--bg);
+      color:var(--txt);
+    }
+    .wrap{max-width:920px; margin:0 auto; padding:22px 16px}
+    header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:16px; border:1px solid var(--line); border-radius:18px;
+      background:rgba(17,24,39,.75);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    .logo{display:flex; align-items:center; gap:10px; font-weight:900}
+    .dot{width:10px;height:10px;border-radius:50%; background:linear-gradient(135deg,var(--brand),var(--brand2))}
+    .pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 12px; border-radius:999px; border:1px solid var(--line);
+      background:rgba(255,255,255,.04); color:var(--muted); font-weight:800;
+    }
+
+    main{margin-top:16px; display:grid; gap:14px}
+    @media(min-width:860px){ main{grid-template-columns:1.1fr .9fr} }
+
+    .card{
+      border:1px solid var(--line);
+      background:rgba(17,24,39,.75);
+      border-radius:18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      padding:16px;
+    }
+    h1{margin:0 0 8px; font-size:28px; line-height:1.1}
+    p{margin:0 0 12px; color:var(--muted); line-height:1.6}
+
+    label{
+      display:block; margin:10px 0 6px;
+      font-size:12px; color:var(--muted); font-weight:900;
+      letter-spacing:.06em; text-transform:uppercase;
+    }
+    .input, textarea{
+      width:100%;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      color:var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:90px; resize:vertical}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:12px; border:1px solid var(--line);
+      background:rgba(255,255,255,.05); color:var(--txt);
+      cursor:pointer; font-weight:900;
+      transition:.15s transform,.15s background;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px); background:rgba(255,255,255,.08)}
+    .btn.brand{background:linear-gradient(135deg, rgba(124,58,237,.95), rgba(34,197,94,.75)); border-color:transparent}
+    .btn.brand:hover{filter:brightness(1.06)}
+    .quick{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+    .quick .btn{padding:8px 10px; font-weight:900}
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:13px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      word-break:break-all;
+    }
+    .small{font-size:12px; color:var(--muted); font-weight:800}
+    .ok{color:#bbf7d0}
+    .warn{color:#fde68a}
+    footer{margin-top:14px; color:var(--muted); font-size:12px; text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo"><span class="dot"></span> Página de Doações</div>
+      <span class="pill">PIX • rápido e simples</span>
+    </header>
+
+    <main>
+      <!-- Esquerda: campanha -->
+      <section class="card">
+        <h1 id="title">Ajude com uma doação</h1>
+        <p id="desc">
+          Sua contribuição faz diferença. Escolha um valor e doe via PIX.
+        </p>
+
+        <label>Valores rápidos</label>
+        <div class="quick">
+          <button class="btn" data-amt="5">R$ 5</button>
+          <button class="btn" data-amt="10">R$ 10</button>
+          <button class="btn" data-amt="20">R$ 20</button>
+          <button class="btn" data-amt="50">R$ 50</button>
+          <button class="btn" data-amt="100">R$ 100</button>
+        </div>
+
+        <label>Valor (opcional)</label>
+        <input class="input" id="amount" inputmode="decimal" placeholder="Ex: 25,00" />
+
+        <label>Mensagem (opcional)</label>
+        <textarea class="input" id="message" placeholder="Ex: Tamo junto!"></textarea>
+
+        <div class="row" style="margin-top:12px">
+          <button class="btn brand" id="copyPix">Copiar chave PIX</button>
+          <button class="btn" id="copySummary">Copiar resumo</button>
+        </div>
+
+        <p class="small" id="status" style="margin-top:10px"></p>
+      </section>
+
+      <!-- Direita: dados de pagamento -->
+      <aside class="card">
+        <label>Chave PIX (edite no código)</label>
+        <div class="code" id="pixKeyBox">SUA_CHAVE_PIX_AQUI</div>
+        <p class="small warn">Troque a chave PIX no código (procure por <b>PIX_KEY</b>).</p>
+
+        <label>Nome do recebedor</label>
+        <input class="input" id="receiver" value="Minha Causa" />
+
+        <label>Meta (opcional)</label>
+        <input class="input" id="goal" value="R$ 1.000,00" />
+
+        <label>Onde vai ser usado?</label>
+        <textarea class="input" id="useFor">Ex: comprar equipamentos, ajudar com custos, etc.</textarea>
+
+        <div style="margin-top:12px" class="small">
+          ✅ Dica: se você quiser <b>QR Code PIX</b>, dá pra adicionar depois (ou usar um gerador confiável).
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      Feito em HTML • funciona offline • não processa pagamento automaticamente (é só a página de doação).
+    </footer>
+  </div>
+
+  <script>
+    // ========= EDITAR AQUI =========
+    const PIX_KEY = "SUA_CHAVE_PIX_AQUI"; // ex: email@dominio.com ou chave aleatória
+    // ===============================
+
+    const pixKeyBox = document.getElementById("pixKeyBox");
+    pixKeyBox.textContent = PIX_KEY;
+
+    const amountEl = document.getElementById("amount");
+    const msgEl = document.getElementById("message");
+    const receiverEl = document.getElementById("receiver");
+    const goalEl = document.getElementById("goal");
+    const useForEl = document.getElementById("useFor");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(text, kind="ok"){
+      statusEl.className = "small " + (kind === "ok" ? "ok" : "warn");
+      statusEl.textContent = text;
+    }
+
+    // botões de valores rápidos
+    document.querySelectorAll("[data-amt]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const v = btn.getAttribute("data-amt");
+        amountEl.value = v + ",00";
+        setStatus("Valor selecionado: R$ " + v + ",00", "ok");
+      });
+    });
+
+    function buildSummary(){
+      const receiver = receiverEl.value.trim() || "Minha Causa";
+      const goal = goalEl.value.trim() || "-";
+      const useFor = useForEl.value.trim() || "-";
+      const amount = amountEl.value.trim() || "(não informado)";
+      const msg = msgEl.value.trim() || "-";
+
+      return `DOAÇÃO - ${receiver}
+Chave PIX: ${PIX_KEY}
+Valor: ${amount}
+Mensagem: ${msg}
+
+Meta: ${goal}
+Uso: ${useFor}`;
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        return true;
+      }catch{
+        return false;
+      }
+    }
+
+    document.getElementById("copyPix").addEventListener("click", async ()=>{
+      if(!PIX_KEY || PIX_KEY === "SUA_CHAVE_PIX_AQUI"){
+        return setStatus("Você ainda não colocou sua chave PIX no código (PIX_KEY).", "warn");
+      }
+      const ok = await copyText(PIX_KEY);
+      setStatus(ok ? "Chave PIX copiada ✅" : "Não deu pra copiar. Copie manualmente.", ok ? "ok" : "warn");
+    });
+
+    document.getElementById("copySummary").addEventListener("click", async ()=>{
+      const text = buildSummary();
+      const ok = await copyText(text);
+      setStatus(ok ? "Resumo copiado ✅ (cole no WhatsApp/Discord)" : "Não deu pra copiar. Selecione e copie manualmente.", ok ? "ok" : "warn");
+    });
+
+    // status inicial
+    setStatus("Pronto. Selecione um valor e copie a chave PIX.", "ok");
+  </script>
+</body>
+</html>
